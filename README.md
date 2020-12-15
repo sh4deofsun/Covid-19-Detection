@@ -11,7 +11,7 @@ Bulanik mantik kullanilarak Covid 19 taramasi yapilmasi
 
 ## Kullanim:
  - `poetry install`
- - `poetry run streamlit run src/mainWeb.py`
+ - `poetry run streamlit run run.py`
 
 ## Kaynakca:
  - https://github.com/Namerlight/C19-Prediction-via-Symptoms-with-Fuzzy-Logic
@@ -19,6 +19,14 @@ Bulanik mantik kullanilarak Covid 19 taramasi yapilmasi
 
 
 ## Katkida bulunanalar:
- - [Asli YIGIT](https://github.com/asliyigit)
- - [Batuhan YALCIN](https://github.com/sh4deofsun)
- - [Mert BILGIC](https://github.com/mertbilgic)
+<table style="width:100%">
+  <tr>
+    <td align="center"><a href="https://github.com/asliyigit"><img src="https://avatars3.githubusercontent.com/u/52151047" width="100px;" alt=""/><br /><sub><b>Asli YIGIT </b></sub></a><br />
+    </td>
+    <td align="center"><a href="https://github.com/sh4deofsun"><img src="https://avatars2.githubusercontent.com/u/17470615" width="100px;" alt=""/><br /><sub><b>Batuhan YALCIN</b></sub></a><br />
+    </td>
+    </td>
+    <td align="center"><a href="https://github.com/mertbilgic"><img src="https://avatars2.githubusercontent.com/u/34304850" width="100px;" alt=""/><br /><sub><b>Mert Bilgiç</b></sub></a><br />
+    </td>
+  </tr>
+</table>
