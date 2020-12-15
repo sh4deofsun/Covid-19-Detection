@@ -10,6 +10,7 @@ Bulanik mantik kullanilarak Covid 19 taramasi yapilmasi
  - matplotlib
 
 ## Kullanim:
+ - `poetry install`
  - `poetry run streamlit run src/mainWeb.py`
 
 ## Kaynakca:
