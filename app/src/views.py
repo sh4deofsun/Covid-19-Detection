@@ -1,5 +1,7 @@
 import streamlit as st
 
+from app.helper.symptoms import get_symptoms_data
+
 def main ():
     st.title('Covid-19 Tarama')
 
