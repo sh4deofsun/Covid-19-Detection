@@ -1,34 +1,36 @@
 import streamlit as st
 
-from app.helper.symptoms import get_symptoms_data
+from app.helper.calc_risk import calc_additional_risks
 
 def main ():
     st.title('Covid-19 Tarama')
 
-    oksuruk = st.slider('Oksurme araligi:', 0.0, 10.0, 0.0)
+    cough = st.slider('Oksurme araligi:', 0.0, 10.0, 0.0)
 
-    ates = st.slider('Atesiniz:', 30.0, 42.0, 32.0)
+    fever = st.slider('Atesiniz:', 30.0, 42.0, 32.0)
 
-    nefes = st.slider('Nefes alma zorlugu:', 0.0, 10.0, 0.0)
+    breath_diff = st.slider('Nefes alma zorlugu:', 0.0, 10.0, 0.0)
 
-    yas = st.slider('Yasiniz:', 1, 100, 25)
+    age = st.slider('Yasiniz:', 1, 100, 25)
 
-    kirlilik = st.checkbox('Hava kirliligi olan bir yerde mi yasiyorsun?')
+    polluted = st.checkbox('Hava kirliligi olan bir yerde mi yasiyorsun?')
 
-    hipertansiyon = st.checkbox('Hiper Tansiyonun var mi?')
+    hypertension = st.checkbox('Hiper Tansiyonun var mi?')
 
-    diyabet = st.checkbox('Diyabet hastasi misin?')
+    diabetes = st.checkbox('Diyabet hastasi misin?')
 
-    kardio = st.checkbox('Kardiovaskuler bir sorun yasiyor musun?')
+    cardiovascular = st.checkbox('Kardiovaskuler bir sorun yasiyor musun?')
 
-    solunum = st.checkbox('Solunum ile ilgili bir hastaligin var mi?')
+    respiratory = st.checkbox('Solunum ile ilgili bir hastaligin var mi?')
 
-    bagisiklik = st.checkbox('Bagisiklik sistemin zayif mi?')
+    immune = st.checkbox('Bagisiklik sistemin zayif mi?')
 
-    hesapla = st.button('Hesapla')
+    calculate = st.button('Hesapla')
 
-    if(hesapla is True):
-        st.subheader("Don't worry, you will die someday.")
+
+    if(calculate is True):
+        result = calc_additional_risks(age,polluted,hypertension,diabetes,cardiovascular,respiratory,immune)
+        st.subheader(f"Risk Score: {result}")
     else:
         pass
 

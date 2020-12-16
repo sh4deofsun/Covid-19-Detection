@@ -13,7 +13,6 @@ def get_symptoms_data(data_path="app/static/data/symptoms/",ignore=True,sort=Fal
         read_file_name = data_path + name
         data = read_csv(read_file_name,columns)
         df.append(data, ignore_index=ignore, sort=sort)
-    print(df)
     return df
 
 
