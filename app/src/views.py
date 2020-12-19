@@ -1,26 +1,19 @@
 from datetime import time
 import streamlit as st
-
-from app.helper.calc_risk import calc_additional_risks_score, calc_risk_percentage
-
+from numpy import linspace
+from pyit2fls import IT2FLS
+from app.helper.mf import MF
+from app.helper.calc_risk import Risk
 def main ():
     st.title('Covid-19 Tarama')
 
-    cough = st.slider('Oksurme araligi:', 0.0, 10.0, 0.0)
+    cough = st.slider('Oksurme yoğunluğu:', 0.0, 9.9, 0.0)
 
-    fever = st.slider('Atesiniz:', 30.0, 42.0, 32.0)
+    fever = st.slider('Ateş yoğunluğu:', 0.0, 9.9, 0.0)
 
-    breath_diff = st.slider('Nefes alma zorlugu:', 0.0, 10.0, 0.0)
-
-    calculate_covid = st.button('Hesapla')
-
-    st.title('Risk Kontrolü')
-
-    st.info("Bu kontrol sırasında herhangi bir veri kullanılmadı kontrol test amaçlı yapıldı.")
+    breath_diff = st.slider('Nefes alma zorlugu:', 0.0, 9.9, 0.0)
 
     age = st.slider('Yasiniz:', 1, 100, 25)
-
-    density = st.slider('Bölgedeki covid-19 durumu :', 0.0, 10.0, 5.0)
 
     polluted = st.checkbox('Hava kirliligi olan bir yerde mi yasiyorsun?')
 
@@ -38,8 +31,12 @@ def main ():
 
     if(calculate_risk is True):
         additional_risks = (age,polluted,hypertension,diabetes,cardiovascular,respiratory,immune)
-        result = calc_additional_risks_score(*additional_risks)
-        result = calc_risk_percentage(result,density)
-        st.subheader(f"Covid-19'a yakalanma ihtimaliniz %{result}")
+        add_result = Risk.calc_additional_risks_score(*additional_risks)
+        
+        myIT2FLS = IT2FLS()
+        MF.add_input_veriable(myIT2FLS)
+        MF.add_rule(myIT2FLS)
+        risk = MF.evaluate(myIT2FLS,cough,fever,breath_diff,add_result)
 
+        st.subheader(f"Covid-19 olama ihtimalin %{risk}")
 
