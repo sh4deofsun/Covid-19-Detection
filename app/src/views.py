@@ -34,6 +34,6 @@ def main ():
             additional_risks = (age,polluted,hypertension,diabetes,cardiovascular,respiratory,immune)
             add_result = Risk.calc_additional_risks_score(*additional_risks)
         """
-        risk = MF.simulation(cough)
+        risk = MF.simulation(cough,fever)
         st.subheader(f"Covid-19 olama ihtimalin %{risk * 10}")
 
