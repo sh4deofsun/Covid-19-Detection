@@ -1,5 +1,8 @@
 import streamlit as st
+
 from app.helper.mf import MF
+from app.src.graph import get_graphics
+
 def main ():
     st.title('Covid-19 Tarama')
 
@@ -34,4 +37,5 @@ def main ():
         """
         risk = MF.simulation(cough,fever,breath_diff,pain)
         st.subheader(f"Covid-19 olama ihtimalin %{risk * 10}")
+        get_graphics()
 
