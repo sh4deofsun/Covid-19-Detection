@@ -18,9 +18,9 @@ class MF():
 
     breath_diff = ctrl.Antecedent(np.arange(0, 10, 0.1), 'breath_diff')
 
-    breath_diff['low'] = fuzz.trimf(fever.universe,[0,0,7])
-    breath_diff['medium'] = fuzz.trimf(fever.universe,[7,8,9])
-    breath_diff['high'] = fuzz.trimf(fever.universe,[9,10,10])
+    breath_diff['low'] = fuzz.trimf(fever.universe,[0,0,6.50])
+    breath_diff['medium'] = fuzz.trimf(fever.universe,[6.50,7,8])
+    breath_diff['high'] = fuzz.trimf(fever.universe,[8,10,10])
 
     pain = ctrl.Antecedent(np.arange(0, 10, 0.1), 'pain')
 
@@ -55,9 +55,9 @@ class MF():
         return result
 
     """
-        IF Öksürük AND Ateş düşük THEN ateş düşükse = output['low']
-        IF düşük ateş AND orta THEN ateş orta ise = output['medium']
-        IF düşük ateş ANDyüksekse çıktı yüksek ise = output['high']
+        EĞER Öksürük VE Ateş düşük ateş düşükse = output['low']
+        EĞER düşük ateş VE orta ateş orta ise = output['medium']
+        EĞER düşük ateş VE yüksekse çıktı yüksek ise = output['high']
         ...
     """
 
@@ -77,12 +77,15 @@ class MF():
             (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['low'] ) |
             (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['medium'] ) |
             (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['low'] ) |
+            (MF.cough['neg'] & MF.fever['high'] & MF.breath_diff['low'] & MF.pain['low'] ) |
             (MF.breath_diff['medium'] & MF.fever['medium']), MF.output['medium'])
         rule3 = ctrl.Rule(
             (MF.cough['neg'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['high']) | 
             (MF.fever['high'] & MF.breath_diff['medium'] & MF.cough['neg'] & MF.pain['high']) |
             (MF.fever['high'] & MF.breath_diff['high'] & MF.cough['neg'] & MF.pain['medium']) |
             (MF.fever['high'] & MF.breath_diff['medium'] & MF.cough['neg'] & MF.pain['medium']) |
+            (MF.fever['high'] & MF.breath_diff['low'] & MF.cough['neg'] & MF.pain['high']) |
+            (MF.fever['high'] & MF.breath_diff['high'] & MF.cough['neg'] & MF.pain['low']) |
             (MF.fever['medium'] & MF.breath_diff['high'] & MF.cough['neg'] & MF.pain['high']) |
             (MF.fever['medium'] & MF.breath_diff['low'] & MF.cough['neg'] & MF.pain['high']), MF.output['high'])
         #coug pos
@@ -93,6 +96,8 @@ class MF():
         rule5 = ctrl.Rule(
             (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['medium']) |
             (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['medium']) |
+            (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['low']) |
+            (MF.cough['pos'] & MF.fever['low'] & MF.breath_diff['high'] & MF.pain['high']) |
             (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['low']), MF.output['medium'])
         rule6 = ctrl.Rule(
             (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['high']) |
@@ -102,6 +107,7 @@ class MF():
             (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['low']) |
             (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['low']) &  MF.pain['medium'] |
             (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['medium']) &  MF.pain['low'] |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['low']) &  MF.pain['low'] |
             (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['high'] & MF.pain['high']), MF.output['high'])
 
         return [rule1,rule2,rule3,rule4,rule5,rule6]
