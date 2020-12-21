@@ -14,6 +14,7 @@ def main ():
 
     pain = st.slider('Ağrı Yoğunluğu', 0.0, 9.9, 0.0)
 
+    """
     age = st.slider('Yasiniz:', 1, 100, 25)
 
     polluted = st.checkbox('Hava kirliligi olan bir yerde mi yasiyorsun?')
@@ -27,6 +28,7 @@ def main ():
     respiratory = st.checkbox('Solunum ile ilgili bir hastaligin var mi?')
 
     immune = st.checkbox('Bagisiklik sistemin zayif mi?')
+    """
 
     calculate_risk = st.button('Hesapla ')
 

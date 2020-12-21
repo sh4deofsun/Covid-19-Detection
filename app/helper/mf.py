@@ -1,6 +1,7 @@
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
+
 from app.helper.skfuzzy_mp import view
 class MF():
 
@@ -13,20 +14,20 @@ class MF():
     fever = ctrl.Antecedent(np.arange(0, 10, 0.1), 'fever')
 
     fever['low'] = fuzz.trimf(fever.universe,[0,0,2.65])
-    fever['medium'] = fuzz.trimf(fever.universe,[2.65,5,7])
+    fever['medium'] = fuzz.trimf(fever.universe,[2.65,4.82,7])
     fever['high'] = fuzz.trimf(fever.universe,[5,10,10])
 
     breath_diff = ctrl.Antecedent(np.arange(0, 10, 0.1), 'breath_diff')
 
-    breath_diff['low'] = fuzz.trimf(fever.universe,[0,0,6.50])
-    breath_diff['medium'] = fuzz.trimf(fever.universe,[6.50,7,8])
-    breath_diff['high'] = fuzz.trimf(fever.universe,[8,10,10])
+    breath_diff['low'] = fuzz.trimf(breath_diff.universe,[0,0,6.50])
+    breath_diff['medium'] = fuzz.trimf(breath_diff.universe,[6.50,7.25,8])
+    breath_diff['high'] = fuzz.trimf(breath_diff.universe,[8,10,10])
 
     pain = ctrl.Antecedent(np.arange(0, 10, 0.1), 'pain')
 
-    pain['low'] = fuzz.trimf(fever.universe,[0,0,7.20])
-    pain['medium'] = fuzz.trimf(fever.universe,[7.20,8,8.20])
-    pain['high'] = fuzz.trimf(fever.universe,[8.20,10,10])
+    pain['low'] = fuzz.trimf(pain.universe,[0,0,7.20])
+    pain['medium'] = fuzz.trimf(pain.universe,[7.20,7.70,8.20])
+    pain['high'] = fuzz.trimf(pain.universe,[8.20,10,10])
 
     output = ctrl.Consequent(np.arange(0, 10, 0.1), 'output')
 
@@ -50,6 +51,10 @@ class MF():
 
         # output
         result = covid_simulator.output['output']
+        """
+            Her seferinde grafiklerin oluşturulmasına gerek yok.
+            Oluşturulması gereken durumlar için config dosyası hazırlanabilir.
+        """
         view(MF.output,sim=covid_simulator,name="output")
         view(MF.cough,sim=covid_simulator,name="cough")
         view(MF.fever,sim=covid_simulator,name="fever")
