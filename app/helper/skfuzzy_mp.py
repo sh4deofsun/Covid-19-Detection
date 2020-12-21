@@ -11,4 +11,4 @@ from skfuzzy.control.visualization import FuzzyVariableVisualizer
 def view(self, *args, **kwargs):
     """""" + FuzzyVariableVisualizer.view.__doc__
     fig, ax = FuzzyVariableVisualizer(self).view(*args, **kwargs)
-    fig.savefig(f"{kwargs.get('name')}.png")
+    fig.savefig(f"graphic/{kwargs.get('name')}.png")

@@ -51,6 +51,10 @@ class MF():
         # output
         result = covid_simulator.output['output']
         view(MF.output,sim=covid_simulator,name="output")
+        view(MF.cough,sim=covid_simulator,name="cough")
+        view(MF.fever,sim=covid_simulator,name="fever")
+        view(MF.breath_diff,sim=covid_simulator,name="breath_diff")
+        view(MF.pain,sim=covid_simulator,name="pain")
 
         return result
 
