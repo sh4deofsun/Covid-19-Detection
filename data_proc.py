@@ -1,4 +1,3 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 
 from app.helper.symptoms import get_symptoms_data,get_data_count

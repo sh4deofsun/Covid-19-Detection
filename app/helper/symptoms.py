@@ -1,7 +1,5 @@
 import os
 
-import pandas as pd
-
 from app.helper.csv_helper import read_csv
 
 def get_symptoms_data(data_path="app/static/data/symptoms/",ignore=True,sort=False,columns=['Symptoms']):

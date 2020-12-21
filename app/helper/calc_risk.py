@@ -1,9 +1,3 @@
-
-import numpy as np
-
-from app.helper.mf import MF
-
-from pyit2fls import IT2FS_Gaussian_UncertMean
 class Risk():
 
     @staticmethod

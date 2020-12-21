@@ -1,17 +1,8 @@
-from pyit2fls import IT2FS, trapezoid_mf, tri_mf, IT2FS_Gaussian_UncertMean, \
-    IT2FS_plot, IT2FLS, min_t_norm, max_s_norm, TR_plot, crisp
-
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 from app.helper.skfuzzy_mp import view
-
-
-from numpy import linspace
-
 class MF():
-
-    severity = linspace(0.0, 10.0, 100)
 
     cough = ctrl.Antecedent(np.arange(0, 10, 0.1), 'cough')
 
