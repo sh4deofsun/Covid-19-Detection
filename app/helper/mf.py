@@ -4,6 +4,8 @@ from pyit2fls import IT2FS, trapezoid_mf, tri_mf, IT2FS_Gaussian_UncertMean, \
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
+from app.helper.skfuzzy_mp import view
+
 
 from numpy import linspace
 
@@ -51,6 +53,7 @@ class MF():
 
         # output
         result = covid_simulator.output['output']
+        view(MF.output,sim=covid_simulator,name="output")
 
         return result
 
