@@ -1,7 +1,11 @@
 from pyit2fls import IT2FS, trapezoid_mf, tri_mf, IT2FS_Gaussian_UncertMean, \
     IT2FS_plot, IT2FLS, min_t_norm, max_s_norm, TR_plot, crisp
 
+import numpy as np
 import skfuzzy as fuzz
+from skfuzzy import control as ctrl
+from app.helper.skfuzzy_mp import view
+
 
 from numpy import linspace
 
@@ -9,94 +13,113 @@ class MF():
 
     severity = linspace(0.0, 10.0, 100)
 
-    cough_neg = IT2FS(severity, trapezoid_mf, [0., 0.001, 3, 7, 1.0],
-                      tri_mf, [0, 0.001, 2, 0.5])
-    cough_pos = IT2FS(severity, trapezoid_mf, [5, 8, 9.999, 10, 1.0],
-                      tri_mf, [8.5, 9.999, 10, 0.5])
+    cough = ctrl.Antecedent(np.arange(0, 10, 0.1), 'cough')
 
-    fever_low = IT2FS_Gaussian_UncertMean(severity, [0, 2.65, 1, 1.0])
-    fever_mod = IT2FS_Gaussian_UncertMean(severity, [5, 2.65, 1, 1.0])
-    fever_high = IT2FS_Gaussian_UncertMean(severity, [10, 2.65, 1, 1.0])
+    cough['neg'] = fuzz.trimf(cough.universe, [0, 0, 5.95])
 
-    breath_diff_low = IT2FS_Gaussian_UncertMean(severity, [0, 1.75, 1, 1.0])
-    breath_diff_mod = IT2FS_Gaussian_UncertMean(severity, [5, 2.5, 1, 1.0])
-    breath_diff_extr = IT2FS_Gaussian_UncertMean(severity, [10, 1.75, 1, 1.0])
+    cough['pos'] = fuzz.trimf(cough.universe, [5.95, 10, 10])
 
-    add_low = IT2FS_Gaussian_UncertMean(severity, [0, 5, 2, 1.0])
-    add_high = IT2FS_Gaussian_UncertMean(severity, [10, 5, 2, 1.0])
+    fever = ctrl.Antecedent(np.arange(0, 10, 0.1), 'fever')
 
-    risk_low = IT2FS_Gaussian_UncertMean(severity, [0, 3, 1, 1.0])
-    risk_high = IT2FS_Gaussian_UncertMean(severity, [6.5, 2, 1, 1.0])
-    risk_veryhigh = IT2FS_Gaussian_UncertMean(severity, [10.7, 1, 1, 1.0])
-    
-    @staticmethod
-    def add_rule(myIT2FLS):
-        myIT2FLS.add_rule([("cough", MF.cough_neg), ("fever", MF.fever_low), ("breath", MF.breath_diff_low), ("add", MF.add_low)],
-                      [("risk", MF.risk_low)])
-        myIT2FLS.add_rule([("cough", MF.cough_pos), ("fever", MF.fever_mod), ("breath", MF.breath_diff_low), ("add", MF.add_low)],
-                        [("risk", MF.risk_low)])
-        myIT2FLS.add_rule([("cough", MF.cough_neg), ("fever", MF.fever_high), ("breath", MF.breath_diff_low), ("add", MF.add_low)],
-                        [("risk", MF.risk_low)])
-        myIT2FLS.add_rule([("cough", MF.cough_neg), ("fever", MF.fever_high), ("breath", MF.breath_diff_low), ("add", MF.add_high)],
-                        [("risk", MF.risk_low)])
-        myIT2FLS.add_rule([("cough", MF.cough_neg), ("fever", MF.fever_low), ("breath", MF.breath_diff_extr), ("add", MF.add_low)],
-                        [("risk", MF.risk_high)])
-        myIT2FLS.add_rule([("cough", MF.cough_neg), ("fever", MF.fever_high), ("breath", MF.breath_diff_mod), ("add", MF.add_low)],
-                        [("risk", MF.risk_high)])
-        myIT2FLS.add_rule([("cough", MF.cough_pos), ("fever", MF.fever_mod), ("breath", MF.breath_diff_mod), ("add", MF.add_high)],
-                        [("risk", MF.risk_veryhigh)])
-        myIT2FLS.add_rule([("cough", MF.cough_pos), ("fever", MF.fever_low), ("breath", MF.breath_diff_extr), ("add", MF.add_high)],
-                        [("risk", MF.risk_veryhigh)])
-        myIT2FLS.add_rule([("cough", MF.cough_pos), ("fever", MF.fever_mod), ("breath", MF.breath_diff_mod), ("add", MF.add_high)],
-                        [("risk", MF.risk_veryhigh)])
-        myIT2FLS.add_rule([("cough", MF.cough_pos), ("fever", MF.fever_high), ("breath", MF.breath_diff_extr), ("add", MF.add_high)],
-                        [("risk", MF.risk_veryhigh)])
-    @staticmethod
-    def add_input_veriable(myIT2FLS):
-        myIT2FLS.add_input_variable("cough")
-        myIT2FLS.add_input_variable("fever")
-        myIT2FLS.add_input_variable("breath")
-        myIT2FLS.add_input_variable("add")
-        myIT2FLS.add_output_variable("risk")
+    fever['low'] = fuzz.trimf(fever.universe,[0,0,2.65])
+    fever['medium'] = fuzz.trimf(fever.universe,[2.65,5,7])
+    fever['high'] = fuzz.trimf(fever.universe,[5,10,10])
+
+    breath_diff = ctrl.Antecedent(np.arange(0, 10, 0.1), 'breath_diff')
+
+    breath_diff['low'] = fuzz.trimf(fever.universe,[0,0,7])
+    breath_diff['medium'] = fuzz.trimf(fever.universe,[7,8,9])
+    breath_diff['high'] = fuzz.trimf(fever.universe,[9,10,10])
+
+    pain = ctrl.Antecedent(np.arange(0, 10, 0.1), 'pain')
+
+    pain['low'] = fuzz.trimf(fever.universe,[0,0,7.20])
+    pain['medium'] = fuzz.trimf(fever.universe,[7.20,8,8.20])
+    pain['high'] = fuzz.trimf(fever.universe,[8.20,10,10])
+
+    output = ctrl.Consequent(np.arange(0, 10, 0.1), 'output')
+
+    output['low'] = fuzz.trimf(output.universe, [0, 0, 4])
+    output['medium'] = fuzz.trimf(output.universe, [4, 7, 10])
+    output['high'] = fuzz.trimf(output.universe, [7, 10, 10])
+
 
     @staticmethod
-    def evaluate(myIT2FLS,cough_inp,fever_inp,breath_inp,add_inp,):
+    def simulation(cough,fever,breath_diff,pain,add_inp=""):
+        # controller
+        covid_controller = ctrl.ControlSystem(MF.get_rule())
 
-        it2out, tr = myIT2FLS.evaluate({"cough": cough_inp, "fever": fever_inp, "breath": breath_inp, "add": add_inp},
-                                min_t_norm, max_s_norm, MF.severity,
-                                method="Centroid", algorithm="EKM")
-        it2out["risk"].plot(title="Type-2 output MF converted to Type-1")
-        TR_plot(MF.severity, tr["risk"])
+        # simulation
+        covid_simulator = ctrl.ControlSystemSimulation(covid_controller)
 
-        return int((crisp(tr["risk"])) * 10)
+
+        MF.load_input(covid_simulator,cough,fever,breath_diff,pain)
+
+        covid_simulator.compute()
+
+        # output
+        result = covid_simulator.output['output']
+        view(MF.output,sim=covid_simulator,name="output")
+
+        return result
+
+    """
+        IF Öksürük AND Ateş düşük THEN ateş düşükse = output['low']
+        IF düşük ateş AND orta THEN ateş orta ise = output['medium']
+        IF düşük ateş ANDyüksekse çıktı yüksek ise = output['high']
+        ...
+    """
 
     @staticmethod
-    def plot_cough_mf():
-        IT2FS_plot(MF.cough_neg, MF.cough_pos,
-                   title="Cough",
-                   legends=["Negative", "Positive"],
-                   )
+    def get_rule():
+        #coug neg
+        rule1 = ctrl.Rule(
+            (MF.cough['neg'] & MF.fever['low'] & MF.breath_diff['low'] & MF.pain['low']) |
+            (MF.cough['neg'] & MF.fever['low'] & MF.breath_diff['medium'] & MF.pain['medium']) |
+            (MF.cough['neg'] & MF.fever['low'] & MF.breath_diff['low'] & MF.pain['medium']) |
+            (MF.cough['neg'] & MF.fever['low'] & MF.breath_diff['medium'] & MF.pain['low']) |
+            (MF.cough['neg'] & MF.fever['low'] & MF.breath_diff['low'] & MF.pain['high']) |
+            (MF.cough['neg'] & MF.fever['low'] & MF.pain['low']) |
+            (MF.fever['low']), MF.output['low'])
+        rule2 = ctrl.Rule(
+            (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['medium']) |
+            (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['low'] ) |
+            (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['medium'] ) |
+            (MF.cough['neg'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['low'] ) |
+            (MF.breath_diff['medium'] & MF.fever['medium']), MF.output['medium'])
+        rule3 = ctrl.Rule(
+            (MF.cough['neg'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['high']) | 
+            (MF.fever['high'] & MF.breath_diff['medium'] & MF.cough['neg'] & MF.pain['high']) |
+            (MF.fever['high'] & MF.breath_diff['high'] & MF.cough['neg'] & MF.pain['medium']) |
+            (MF.fever['high'] & MF.breath_diff['medium'] & MF.cough['neg'] & MF.pain['medium']) |
+            (MF.fever['medium'] & MF.breath_diff['high'] & MF.cough['neg'] & MF.pain['high']) |
+            (MF.fever['medium'] & MF.breath_diff['low'] & MF.cough['neg'] & MF.pain['high']), MF.output['high'])
+        #coug pos
+        rule4 = ctrl.Rule(
+            (MF.cough['pos'] & MF.fever['low'] & MF.breath_diff['low'] & MF.pain['low']) |
+            (MF.cough['pos'] & MF.fever['low'] & MF.breath_diff['low'] & MF.pain['medium']) |
+            (MF.cough['pos'] & MF.fever['low'] & MF.breath_diff['medium'] & MF.pain['low']), MF.output['low'])
+        rule5 = ctrl.Rule(
+            (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['medium']) |
+            (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['low'] & MF.pain['medium']) |
+            (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['medium'] & MF.pain['low']), MF.output['medium'])
+        rule6 = ctrl.Rule(
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['high']) |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['medium'] & MF.pain['high']) |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['medium']) |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['low'] & MF.pain['high']) |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['high'] & MF.pain['low']) |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['low']) &  MF.pain['medium'] |
+            (MF.cough['pos'] & MF.fever['high'] & MF.breath_diff['medium']) &  MF.pain['low'] |
+            (MF.cough['pos'] & MF.fever['medium'] & MF.breath_diff['high'] & MF.pain['high']), MF.output['high'])
+
+        return [rule1,rule2,rule3,rule4,rule5,rule6]
+
     @staticmethod
-    def plot_fever_mf():
-        IT2FS_plot(MF.fever_low, MF.fever_mod, MF.fever_high,
-                   title="Fever",
-                   legends=["Low", "Moderate", "High"],
-                   )
-    @staticmethod
-    def plot_additional_mf():
-        IT2FS_plot(MF.add_low, MF.add_high,
-                   title="Additional Risks",
-                   legends=["Low", "High"],
-                   )
-    @staticmethod
-    def plot_breathdiff_mf():
-        IT2FS_plot(MF.breath_diff_low, MF.breath_diff_mod, MF.breath_diff_extr,
-                   title="Breathing Difficulty",
-                   legends=["Low", "Moderate", "High"],
-                   )
-    @staticmethod
-    def plot_risk_mf():
-        IT2FS_plot(MF.risk_low, MF.risk_high, MF.risk_veryhigh,
-                   title="Overall Risk",
-                   legends=["Unlikely", "Likely", "Extremely Likely"],
-                   )
+    def load_input(covid_simulator,cough,fever,breath_diff,pain):
+        covid_simulator.input['cough'] = cough
+        covid_simulator.input['fever'] = fever
+        covid_simulator.input['breath_diff'] = breath_diff
+        covid_simulator.input['pain'] = pain
+
+  
