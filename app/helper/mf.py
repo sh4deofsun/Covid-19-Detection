@@ -9,31 +9,31 @@ class MF():
 
     cough['neg'] = fuzz.trimf(cough.universe, [0, 0, 5.95])
 
-    cough['pos'] = fuzz.trimf(cough.universe, [5.95, 10, 10])
+    cough['pos'] = fuzz.trimf(cough.universe, [3.95, 10, 10])
 
     fever = ctrl.Antecedent(np.arange(0, 10, 0.1), 'fever')
 
     fever['low'] = fuzz.trimf(fever.universe,[0,0,2.65])
-    fever['medium'] = fuzz.trimf(fever.universe,[2.65,4.82,7])
+    fever['medium'] = fuzz.trimf(fever.universe,[1.65,4.82,7])
     fever['high'] = fuzz.trimf(fever.universe,[5,10,10])
 
     breath_diff = ctrl.Antecedent(np.arange(0, 10, 0.1), 'breath_diff')
 
     breath_diff['low'] = fuzz.trimf(breath_diff.universe,[0,0,6.50])
-    breath_diff['medium'] = fuzz.trimf(breath_diff.universe,[6.50,7.25,8])
-    breath_diff['high'] = fuzz.trimf(breath_diff.universe,[8,10,10])
+    breath_diff['medium'] = fuzz.trimf(breath_diff.universe,[5.50,6.80,7.25])
+    breath_diff['high'] = fuzz.trimf(breath_diff.universe,[7,10,10])
 
     pain = ctrl.Antecedent(np.arange(0, 10, 0.1), 'pain')
 
     pain['low'] = fuzz.trimf(pain.universe,[0,0,7.20])
-    pain['medium'] = fuzz.trimf(pain.universe,[7.20,7.70,8.20])
-    pain['high'] = fuzz.trimf(pain.universe,[8.20,10,10])
+    pain['medium'] = fuzz.trimf(pain.universe,[6.20,7.70,8.15])
+    pain['high'] = fuzz.trimf(pain.universe,[7.20,10,10])
 
     output = ctrl.Consequent(np.arange(0, 10, 0.1), 'output')
 
     output['low'] = fuzz.trimf(output.universe, [0, 0, 4])
-    output['medium'] = fuzz.trimf(output.universe, [4, 7, 10])
-    output['high'] = fuzz.trimf(output.universe, [7, 10, 10])
+    output['medium'] = fuzz.trimf(output.universe, [2, 5, 8])
+    output['high'] = fuzz.trimf(output.universe, [6, 10, 10])
 
 
     @staticmethod
